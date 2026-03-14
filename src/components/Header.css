@@ -1,0 +1,17 @@
+.header {
+  padding: 1rem 1.5rem;
+  background-color: #4a7c59;
+  color: white;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.header p {
+  font-size: 0.8rem;
+  opacity: 0.85;
+  margin-top: 0.15rem;
+}
