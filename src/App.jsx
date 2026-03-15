@@ -7,17 +7,42 @@ import LoginPage from './components/LoginPage'
 import './App.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const STORAGE_KEY = 'diet-chat-history'
+const MAX_MESSAGES = 20
+
+const WELCOME_MESSAGE = {
+  role: 'assistant',
+  content:
+    "Welcome! I'm your animal-based diet assistant. Ask me anything about the animal-based way of eating — foods, meal ideas, nutrition, and more.",
+}
+
+const PRESET_MESSAGES = [
+  'What is the Animal Based Diet?',
+  'What foods should I eat on an animal-based diet?',
+  'Give me a simple animal-based meal plan for a day',
+]
+
+function loadMessages() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed
+    }
+  } catch {}
+  return [WELCOME_MESSAGE]
+}
+
+function saveMessages(messages) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-MAX_MESSAGES)))
+  } catch {}
+}
 
 function App() {
   const [session, setSession] = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
-  const [messages, setMessages] = useState([
-    {
-      role: 'assistant',
-      content:
-        "Welcome! I'm your animal-based diet assistant. Ask me anything about the animal-based way of eating — foods, meal ideas, nutrition, and more.",
-    },
-  ])
+  const [messages, setMessages] = useState(loadMessages)
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef(null)
 
@@ -37,8 +62,15 @@ function App() {
   }, [])
 
   useEffect(() => {
+    saveMessages(messages)
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  const hasUserMessages = messages.some((msg) => msg.role === 'user')
+
+  const clearChat = () => {
+    setMessages([WELCOME_MESSAGE])
+  }
 
   const signIn = () => {
     supabase.auth.signInWithOAuth({
@@ -49,13 +81,8 @@ function App() {
 
   const signOut = async () => {
     await supabase.auth.signOut()
-    setMessages([
-      {
-        role: 'assistant',
-        content:
-          "Welcome! I'm your animal-based diet assistant. Ask me anything about the animal-based way of eating — foods, meal ideas, nutrition, and more.",
-      },
-    ])
+    localStorage.removeItem(STORAGE_KEY)
+    setMessages([WELCOME_MESSAGE])
   }
 
   const sendMessage = async (text) => {
@@ -130,6 +157,19 @@ function App() {
           {messages.map((msg, i) => (
             <ChatMessage key={i} role={msg.role} content={msg.content} />
           ))}
+          {!hasUserMessages && !isLoading && (
+            <div className="presets">
+              {PRESET_MESSAGES.map((text) => (
+                <button
+                  key={text}
+                  className="preset-btn"
+                  onClick={() => sendMessage(text)}
+                >
+                  {text}
+                </button>
+              ))}
+            </div>
+          )}
           {isLoading && (
             <div className="message assistant">
               <div className="typing-indicator">
@@ -139,7 +179,14 @@ function App() {
           )}
           <div ref={messagesEndRef} />
         </div>
-        <ChatInput onSend={sendMessage} disabled={isLoading} />
+        <div className="input-row">
+          <ChatInput onSend={sendMessage} disabled={isLoading} />
+          {hasUserMessages && (
+            <button className="clear-btn" onClick={clearChat} title="Clear chat">
+              Clear
+            </button>
+          )}
+        </div>
       </main>
     </div>
   )
