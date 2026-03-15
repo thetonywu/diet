@@ -163,27 +163,28 @@
 
 .presets {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 0.5rem;
-  align-self: center;
-  justify-content: center;
-  margin-top: 0.5rem;
+  align-self: flex-start;
+  max-width: 80%;
+  margin-top: 0.25rem;
 }
 
 .preset-btn {
-  background-color: white;
-  border: 1px solid #d0d0d0;
+  background-color: transparent;
+  border: 1.5px dashed #4a7c59;
   border-radius: 1rem;
   padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  color: #2d2d2d;
+  font-size: 0.88rem;
+  color: #4a7c59;
   cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s;
+  text-align: left;
+  transition: background-color 0.15s, border-style 0.15s;
 }
 
 .preset-btn:hover {
-  background-color: #f0f0f0;
-  border-color: #4a7c59;
+  background-color: rgba(74, 124, 89, 0.08);
+  border-style: solid;
 }
 
 .input-row {
