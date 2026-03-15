@@ -1,12 +1,16 @@
 import { useState, useRef, useEffect } from 'react'
+import { supabase } from './supabaseClient'
 import ChatMessage from './components/ChatMessage'
 import ChatInput from './components/ChatInput'
 import Header from './components/Header'
+import LoginPage from './components/LoginPage'
 import './App.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 function App() {
+  const [session, setSession] = useState(null)
+  const [authLoading, setAuthLoading] = useState(true)
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
@@ -18,8 +22,39 @@ function App() {
   const messagesEndRef = useRef(null)
 
   useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+      setAuthLoading(false)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => setSession(session)
+    )
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  const signIn = () => {
+    supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin },
+    })
+  }
+
+  const signOut = async () => {
+    await supabase.auth.signOut()
+    setMessages([
+      {
+        role: 'assistant',
+        content:
+          "Welcome! I'm your animal-based diet assistant. Ask me anything about the animal-based way of eating — foods, meal ideas, nutrition, and more.",
+      },
+    ])
+  }
 
   const sendMessage = async (text) => {
     const userMessage = { role: 'user', content: text }
@@ -29,7 +64,10 @@ function App() {
     try {
       const res = await fetch(`${API_URL}/api/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({
           message: text,
           history: [...messages, userMessage],
@@ -50,9 +88,29 @@ function App() {
     }
   }
 
+  if (authLoading) {
+    return (
+      <div className="app">
+        <Header />
+        <main className="chat-container">
+          <div className="loading">Loading...</div>
+        </main>
+      </div>
+    )
+  }
+
+  if (!session) {
+    return (
+      <div className="app">
+        <Header />
+        <LoginPage onSignIn={signIn} />
+      </div>
+    )
+  }
+
   return (
     <div className="app">
-      <Header />
+      <Header user={session.user} onSignOut={signOut} />
       <main className="chat-container">
         <div className="messages">
           {messages.map((msg, i) => (
