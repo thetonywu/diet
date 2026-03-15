@@ -68,10 +68,6 @@ function App() {
 
   const hasUserMessages = messages.some((msg) => msg.role === 'user')
 
-  const clearChat = () => {
-    setMessages([WELCOME_MESSAGE])
-  }
-
   const signIn = () => {
     supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -179,14 +175,7 @@ function App() {
           )}
           <div ref={messagesEndRef} />
         </div>
-        <div className="input-row">
-          <ChatInput onSend={sendMessage} disabled={isLoading} />
-          {hasUserMessages && (
-            <button className="clear-btn" onClick={clearChat} title="Clear chat">
-              Clear
-            </button>
-          )}
-        </div>
+        <ChatInput onSend={sendMessage} disabled={isLoading} />
       </main>
     </div>
   )

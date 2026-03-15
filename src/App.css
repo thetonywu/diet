@@ -188,33 +188,6 @@
   border-style: solid;
 }
 
-.input-row {
-  display: flex;
-  gap: 0.5rem;
-  align-items: stretch;
-  padding: 0 0;
-}
-
-.input-row > :first-child {
-  flex: 1;
-}
-
-.clear-btn {
-  background-color: transparent;
-  border: 1px solid #d0d0d0;
-  border-radius: 0.5rem;
-  padding: 0 0.75rem;
-  font-size: 0.85rem;
-  color: #888;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: color 0.15s, border-color 0.15s;
-}
-
-.clear-btn:hover {
-  color: #c0392b;
-  border-color: #c0392b;
-}
 
 @keyframes bounce {
   0%, 80%, 100% {
