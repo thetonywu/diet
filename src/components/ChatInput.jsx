@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import './ChatInput.css'
 
 function ChatInput({ onSend, disabled }) {
   const [text, setText] = useState('')
+  const textareaRef = useRef(null)
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -10,6 +11,7 @@ function ChatInput({ onSend, disabled }) {
     if (!trimmed || disabled) return
     onSend(trimmed)
     setText('')
+    requestAnimationFrame(() => textareaRef.current?.focus())
   }
 
   const handleKeyDown = (e) => {
@@ -22,6 +24,7 @@ function ChatInput({ onSend, disabled }) {
   return (
     <form className="chat-input" onSubmit={handleSubmit}>
       <textarea
+        ref={textareaRef}
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={handleKeyDown}
