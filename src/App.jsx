@@ -25,6 +25,8 @@ function App() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setAuthLoading(false)
+    }).catch(() => {
+      setAuthLoading(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -62,17 +64,29 @@ function App() {
     setIsLoading(true)
 
     try {
+      const { data: { session: freshSession } } = await supabase.auth.getSession()
+      if (!freshSession) {
+        setSession(null)
+        return
+      }
+
       const res = await fetch(`${API_URL}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.access_token}`,
+          Authorization: `Bearer ${freshSession.access_token}`,
         },
         body: JSON.stringify({
           message: text,
           history: [...messages, userMessage],
         }),
       })
+
+      if (res.status === 401) {
+        await supabase.auth.signOut()
+        setSession(null)
+        return
+      }
 
       if (!res.ok) throw new Error('Failed to get response')
 
