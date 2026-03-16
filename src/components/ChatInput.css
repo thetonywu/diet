@@ -20,12 +20,12 @@
 }
 
 .chat-input textarea:focus {
-  border-color: #F80;
+  border-color: var(--color-primary);
 }
 
 .chat-input button {
   padding: 0.6rem 1.25rem;
-  background-color: #F80;
+  background-color: var(--color-primary);
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -36,7 +36,7 @@
 }
 
 .chat-input button:hover:not(:disabled) {
-  background-color: #e07700;
+  background-color: var(--color-primary-dark);
 }
 
 .chat-input button:disabled {

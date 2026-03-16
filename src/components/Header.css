@@ -1,6 +1,6 @@
 .header {
   padding: 0.75rem 1.5rem;
-  background-color: #F80;
+  background-color: var(--color-primary);
   color: white;
 }
 
