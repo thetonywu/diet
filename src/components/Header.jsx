@@ -5,8 +5,7 @@ function Header({ user, onSignOut }) {
     <header className="header">
       <div className="header-content">
         <div>
-          <h1>Animal Based Diet</h1>
-          <p>Your nutrition assistant</p>
+          <h1>Animal Based AI</h1>
         </div>
         {user && (
           <div className="user-info">
