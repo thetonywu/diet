@@ -117,7 +117,7 @@
 
 .message.user {
   align-self: flex-end;
-  background-color: #4a7c59;
+  background-color: #F80;
   color: white;
   border-bottom-right-radius: 0.25rem;
 }
@@ -173,18 +173,18 @@
 
 .preset-btn {
   background-color: transparent;
-  border: 1.5px dashed #4a7c59;
+  border: 1.5px dashed #F80;
   border-radius: 1rem;
   padding: 0.5rem 1rem;
   font-size: 0.88rem;
-  color: #4a7c59;
+  color: #F80;
   cursor: pointer;
   text-align: right;
   transition: background-color 0.15s, border-style 0.15s;
 }
 
 .preset-btn:hover {
-  background-color: rgba(74, 124, 89, 0.08);
+  background-color: rgba(255, 136, 0, 0.08);
   border-style: solid;
 }
 
