@@ -1,3 +1,10 @@
+:root {
+  --color-primary: rgb(252, 162, 59);
+  --color-primary-dark: #e07700;
+  --color-primary-light: rgba(255, 136, 0, 0.08);
+  --color-primary-muted: rgba(255, 136, 0, 0.15);
+}
+
 *,
 *::before,
 *::after {
