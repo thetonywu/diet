@@ -83,6 +83,7 @@ function App() {
 
   const sendMessage = async (text) => {
     const userMessage = { role: 'user', content: text }
+    const history = [...messages]
     setMessages((prev) => [...prev, userMessage])
     setIsLoading(true)
 
@@ -101,7 +102,7 @@ function App() {
         },
         body: JSON.stringify({
           message: text,
-          history: [...messages, userMessage],
+          history: history,
         }),
       })
 
