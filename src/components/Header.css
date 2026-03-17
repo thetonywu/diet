@@ -111,7 +111,9 @@
 }
 
 .settings-item {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   width: 100%;
   padding: 0.6rem 1rem;
   background: none;

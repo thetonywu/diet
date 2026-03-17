@@ -1,45 +1,49 @@
-# Animal Based Diet Chatbot - Frontend
+# Animal Based AI
 
-A React chat interface for the animal-based diet assistant with Google OAuth via Supabase.
-
-## Setup
-
-```bash
-npm install
-```
-
-Copy the example env file and fill in your Supabase credentials:
-
-```bash
-cp .env.example .env
-```
-
-Required environment variables:
-
-| Variable | Description |
-|----------|-------------|
-| `VITE_API_URL` | Backend API URL (default: `http://localhost:8000`) |
-| `VITE_SUPABASE_URL` | Your Supabase project URL |
-| `VITE_SUPABASE_ANON_KEY` | Your Supabase anon/public key |
-
-## Run
-
-```bash
-npm run dev
-```
-
-The app runs at `http://localhost:5173`.
-
-## Auth Flow
-
-1. User clicks "Sign in with Google" on the login page
-2. Supabase handles the OAuth flow with Google
-3. On success, the app receives a session with a JWT
-4. All API calls include the JWT as a Bearer token
+A conversational AI assistant for exploring the animal-based diet. Built with React + Vite on the frontend and a Python backend.
 
 ## Tech Stack
 
-- React 19
-- Vite 8
-- Supabase Auth (`@supabase/supabase-js`)
-- Vanilla CSS
+- **Frontend:** React, Vite
+- **Auth:** Supabase (Google OAuth)
+- **Icons:** Font Awesome
+- **Backend:** Python (separate repo)
+
+## Getting Started
+
+### Prerequisites
+
+- [pnpm](https://pnpm.io)
+- A [Supabase](https://supabase.com) project with Google OAuth enabled
+
+### Setup
+
+```bash
+pnpm install
+```
+
+Create a `.env` file in the project root:
+
+```
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_API_URL=http://localhost:8000
+```
+
+### Development
+
+```bash
+pnpm dev
+```
+
+### Build
+
+```bash
+pnpm build
+```
+
+## Notes
+
+- Users can chat without signing in; a sign-in prompt appears after reaching the free message limit
+- Chat history is stored in `localStorage` and persists across sessions
+- Logging out does not clear chat history — use **Settings → Reset chat** to clear it

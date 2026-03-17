@@ -1,8 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { supabase } from './supabaseClient'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faGoogle } from '@fortawesome/free-brands-svg-icons'
 import ChatMessage from './components/ChatMessage'
 import ChatInput from './components/ChatInput'
 import Header from './components/Header'
+import AboutPage from './components/AboutPage'
 import './App.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -46,6 +49,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [showSignInNudge, setShowSignInNudge] = useState(false)
   const [pendingMessage, setPendingMessage] = useState(() => localStorage.getItem(PENDING_MSG_KEY))
+  const [showAbout, setShowAbout] = useState(false)
   const messagesEndRef = useRef(null)
   const sendMessageRef = useRef(null)
 
@@ -162,9 +166,13 @@ function App() {
     )
   }
 
+  if (showAbout) {
+    return <AboutPage onClose={() => setShowAbout(false)} />
+  }
+
   return (
     <div className="app">
-      <Header user={session?.user} onSignIn={signIn} onSignOut={signOut} onResetChat={resetChat} />
+      <Header user={session?.user} onSignIn={signIn} onSignOut={signOut} onResetChat={resetChat} onAbout={() => setShowAbout(true)} />
       <main className="chat-container">
         <div className="messages">
           {messages.map((msg, i) => (
@@ -193,7 +201,7 @@ function App() {
           {showSignInNudge && (
             <div className="sign-in-nudge">
               <p>You've reached the free message limit. Sign in to keep chatting — it's free.</p>
-              <button className="nudge-sign-in-btn" onClick={signIn}>Sign in with Google</button>
+              <button className="nudge-sign-in-btn" onClick={signIn}><FontAwesomeIcon icon={faGoogle} /> Sign in with Google</button>
             </div>
           )}
           <div ref={messagesEndRef} />

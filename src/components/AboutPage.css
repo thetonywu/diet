@@ -1,0 +1,54 @@
+.about-page {
+  min-height: 100vh;
+  background-color: #f5f0eb;
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
+
+.about-content {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.about-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 0.75rem;
+  transition: color 0.15s;
+}
+
+.about-back:hover {
+  color: #444;
+}
+
+.about-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.about-content h3 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-primary);
+  margin-top: 0.5rem;
+}
+
+.about-content p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #555;
+}
