@@ -20,11 +20,12 @@ function AboutPage({ onClose }) {
 
         <h3>About me</h3>
         <p>
-          Hey, I'm Tony — a software engineer who stumbled onto the animal-based diet a couple years
-          ago and hasn't looked back. I built this as a side project to make it easier for curious
-          people to get quick, practical answers without digging through hours of podcasts and blog
-          posts. I'm not a doctor or nutritionist, just someone who's experienced the benefits
-          firsthand and wanted to share a useful tool.
+          I stumbled onto the animal-based diet a couple years ago and it genuinely changed my life.
+          Was feeling so much better, and I guess it showed too - I was shocked how many people were 
+          giving me compliments on how I looked. I built this as a side project to
+          make it easier for curious people to get quick, practical answers without digging through
+          hours of podcasts and blog posts. I'm not a doctor or nutritionist, just someone who's
+          experienced the benefits firsthand and wanted to share a useful tool.
         </p>
 
         <h3>Disclaimer</h3>
