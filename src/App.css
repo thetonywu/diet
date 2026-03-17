@@ -197,3 +197,38 @@
     transform: scale(1);
   }
 }
+
+.sign-in-nudge {
+  margin: 0.5rem 1rem 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--color-primary-light);
+  border: 1.5px solid var(--color-primary);
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sign-in-nudge p {
+  flex: 1;
+  margin: 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.nudge-sign-in-btn {
+  padding: 0.4rem 0.9rem;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.nudge-sign-in-btn:hover {
+  opacity: 0.85;
+}

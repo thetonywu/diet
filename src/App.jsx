@@ -3,11 +3,11 @@ import { supabase } from './supabaseClient'
 import ChatMessage from './components/ChatMessage'
 import ChatInput from './components/ChatInput'
 import Header from './components/Header'
-import LoginPage from './components/LoginPage'
 import './App.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const STORAGE_KEY = 'diet-chat-history'
+const PENDING_MSG_KEY = 'diet-pending-message'
 const MAX_MESSAGES = 20
 
 const WELCOME_MESSAGE = {
@@ -44,7 +44,10 @@ function App() {
   const [authLoading, setAuthLoading] = useState(true)
   const [messages, setMessages] = useState(loadMessages)
   const [isLoading, setIsLoading] = useState(false)
+  const [showSignInNudge, setShowSignInNudge] = useState(false)
+  const [pendingMessage, setPendingMessage] = useState(() => localStorage.getItem(PENDING_MSG_KEY))
   const messagesEndRef = useRef(null)
+  const sendMessageRef = useRef(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -66,6 +69,17 @@ function App() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
+  useEffect(() => { sendMessageRef.current = sendMessage })
+
+  useEffect(() => {
+    if (session && pendingMessage) {
+      localStorage.removeItem(PENDING_MSG_KEY)
+      setPendingMessage(null)
+      setShowSignInNudge(false)
+      sendMessageRef.current(pendingMessage)
+    }
+  }, [session, pendingMessage])
+
   const hasUserMessages = messages.some((msg) => msg.role === 'user')
 
   const signIn = () => {
@@ -77,8 +91,14 @@ function App() {
 
   const signOut = async () => {
     await supabase.auth.signOut()
+  }
+
+  const resetChat = () => {
     localStorage.removeItem(STORAGE_KEY)
+    localStorage.removeItem(PENDING_MSG_KEY)
     setMessages([WELCOME_MESSAGE])
+    setShowSignInNudge(false)
+    setPendingMessage(null)
   }
 
   const sendMessage = async (text) => {
@@ -89,17 +109,15 @@ function App() {
 
     try {
       const { data: { session: freshSession } } = await supabase.auth.getSession()
-      if (!freshSession) {
-        setSession(null)
-        return
+
+      const headers = { 'Content-Type': 'application/json' }
+      if (freshSession) {
+        headers.Authorization = `Bearer ${freshSession.access_token}`
       }
 
       const res = await fetch(`${API_URL}/api/chat`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${freshSession.access_token}`,
-        },
+        headers,
         body: JSON.stringify({
           message: text,
           history: history,
@@ -112,6 +130,13 @@ function App() {
         return
       }
 
+      if (res.status === 429 && !freshSession) {
+        localStorage.setItem(PENDING_MSG_KEY, text)
+        setPendingMessage(text)
+        setShowSignInNudge(true)
+        return
+      }
+
       if (!res.ok) throw new Error('Failed to get response')
 
       const data = await res.json()
@@ -119,7 +144,7 @@ function App() {
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: 'Sorry, something went wrong. Please try again.' },
+        { role: 'assistant', content: 'Sorry, something went wrong. Please try again later.' },
       ])
     } finally {
       setIsLoading(false)
@@ -137,18 +162,9 @@ function App() {
     )
   }
 
-  if (!session) {
-    return (
-      <div className="app">
-        <Header />
-        <LoginPage onSignIn={signIn} />
-      </div>
-    )
-  }
-
   return (
     <div className="app">
-      <Header user={session.user} onSignOut={signOut} />
+      <Header user={session?.user} onSignIn={signIn} onSignOut={signOut} onResetChat={resetChat} />
       <main className="chat-container">
         <div className="messages">
           {messages.map((msg, i) => (
@@ -172,6 +188,12 @@ function App() {
               <div className="typing-indicator">
                 <span></span><span></span><span></span>
               </div>
+            </div>
+          )}
+          {showSignInNudge && (
+            <div className="sign-in-nudge">
+              <p>You've reached the free message limit. Sign in to keep chatting — it's free.</p>
+              <button className="nudge-sign-in-btn" onClick={signIn}>Sign in with Google</button>
             </div>
           )}
           <div ref={messagesEndRef} />

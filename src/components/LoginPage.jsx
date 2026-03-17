@@ -4,8 +4,8 @@ function LoginPage({ onSignIn }) {
   return (
     <main className="login-page">
       <div className="login-card">
-        <h2>Get Started</h2>
-        <p>Sign in to chat with your animal-based diet assistant.</p>
+        <h2>Animal Based AI</h2>
+        <p>Guiding you on your path to health and wellness. Get started now, it's totally free!</p>
         <button className="google-btn" onClick={onSignIn}>
           <svg viewBox="0 0 24 24" width="20" height="20">
             <path
