@@ -1,7 +1,7 @@
 .header {
   padding: 0.75rem 1.5rem;
-  background-color: var(--color-primary);
-  color: white;
+  background-color: white;
+  border-bottom: 1px solid #e8e2db;
 }
 
 .header-content {
@@ -12,12 +12,17 @@
 
 .header h1 {
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 700;
+  color: #1a1208;
+}
+
+.header-title-accent {
+  color: var(--color-primary);
 }
 
 .header p {
   font-size: 0.8rem;
-  opacity: 0.85;
+  color: #888;
   margin-top: 0.15rem;
 }
 
@@ -35,37 +40,37 @@
 
 .user-email {
   font-size: 0.8rem;
-  opacity: 0.9;
+  color: #555;
 }
 
 .sign-out-btn {
   padding: 0.3rem 0.6rem;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  border: 1px solid #d5cfc8;
   border-radius: 0.35rem;
-  color: white;
+  color: #555;
   font-size: 0.75rem;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .sign-out-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: #f5f0eb;
 }
 
 .sign-in-link {
   padding: 0.3rem 0.75rem;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  border: 1px solid #d5cfc8;
   border-radius: 0.35rem;
-  color: white;
+  color: #555;
   font-size: 0.8rem;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .sign-in-link:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: #f5f0eb;
 }
 
 .header-right {
@@ -89,13 +94,14 @@
   background: transparent;
   border: none;
   border-radius: 50%;
-  color: white;
+  color: #888;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 
 .settings-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: #f5f0eb;
+  color: #444;
 }
 
 .settings-dropdown {

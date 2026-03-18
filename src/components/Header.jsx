@@ -21,7 +21,7 @@ function Header({ user, onSignIn, onSignOut, onResetChat, onAbout }) {
     <header className="header">
       <div className="header-content">
         <div>
-          <h1>Animal Based AI</h1>
+          <h1><span className="header-title-accent">Animal Based AI</span></h1>
         </div>
         <div className="header-right">
           {user ? (
