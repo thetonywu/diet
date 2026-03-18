@@ -20,12 +20,10 @@ function AboutPage({ onClose }) {
 
         <h3>About me</h3>
         <p>
-          I stumbled onto the animal-based diet a couple years ago and it genuinely changed my life.
-          Was feeling so much better, and I guess it showed too - I was shocked how many people were 
-          giving me compliments on how I looked. I built this as a side project to
-          make it easier for curious people to get quick, practical answers without digging through
-          hours of podcasts and blog posts. I'm not a doctor or nutritionist, just someone who's
-          experienced the benefits firsthand and wanted to share a useful tool.
+          I stumbled onto the animal-based diet a couple years ago and it genuinely changed my life. Years of brain fog, digestive issues, and low energy all dramatically started to improve soon after switching. The best part? I  actually enjoyed it. It was ridiculously easy to follow, and everything that I ate on the diet was delicious. All I have to do is eat meat and fruit? Sign me up!
+        </p>
+        <p>
+          I built Animal Based AI to make it easier for curious people to get quick, practical answers without digging through hours of podcasts and blog posts. I'm not a doctor or nutritionist — just someone who's experienced the benefits firsthand and wanted to share a useful tool.
         </p>
 
         <h3>Disclaimer</h3>

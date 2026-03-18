@@ -21,8 +21,9 @@ const WELCOME_MESSAGE = {
 
 const PRESET_MESSAGES = [
   'What is the Animal Based Diet?',
-  'What foods should I eat on an animal-based diet?',
+  'What are the benefits?',
   'Give me a simple animal-based meal plan for a day',
+
 ]
 
 function loadMessages() {
@@ -80,7 +81,7 @@ function App() {
       localStorage.removeItem(PENDING_MSG_KEY)
       setPendingMessage(null)
       setShowSignInNudge(false)
-      sendMessageRef.current(pendingMessage)
+      sendMessageRef.current(pendingMessage, { alreadyAdded: true })
     }
   }, [session, pendingMessage])
 
@@ -105,10 +106,12 @@ function App() {
     setPendingMessage(null)
   }
 
-  const sendMessage = async (text) => {
+  const sendMessage = async (text, { alreadyAdded = false } = {}) => {
     const userMessage = { role: 'user', content: text }
-    const history = [...messages]
-    setMessages((prev) => [...prev, userMessage])
+    const history = alreadyAdded ? messages.slice(0, -1) : [...messages]
+    if (!alreadyAdded) {
+      setMessages((prev) => [...prev, userMessage])
+    }
     setIsLoading(true)
 
     try {
