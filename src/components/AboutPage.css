@@ -8,7 +8,7 @@
 
 .about-content {
   width: 100%;
-  max-width: 560px;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
