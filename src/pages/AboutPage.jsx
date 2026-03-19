@@ -1,21 +1,22 @@
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
-import Header from '../components/Header'
+import { faHouse } from '@fortawesome/free-solid-svg-icons'
 import '../components/AboutPage.css'
 
 function AboutPage() {
-  const navigate = useNavigate()
-
   return (
-    <div className="app">
-      <Header onBack={() => navigate(-1)} />
-      <div className="about-page">
-        <div className="about-content">
-          <button className="about-back" onClick={() => navigate(-1)}>
-            <FontAwesomeIcon icon={faChevronLeft} />
-            Back
-          </button>
+    <div className="about-page">
+      <Helmet>
+        <title>About | Animal Based AI</title>
+        <meta name="description" content="About Animal Based AI — a tool built to help people explore the animal-based diet and get quick, practical answers." />
+        <link rel="canonical" href="https://animalbased.ai/about" />
+      </Helmet>
+      <div className="about-content">
+        <Link to="/" className="about-back">
+          <FontAwesomeIcon icon={faHouse} />
+          Home
+        </Link>
 
           <h2>Animal Based AI</h2>
           <p>
@@ -40,7 +41,6 @@ function AboutPage() {
             important with a professional.
           </p>
         </div>
-      </div>
     </div>
   )
 }

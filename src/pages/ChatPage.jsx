@@ -5,6 +5,7 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons'
 import ChatMessage from '../components/ChatMessage'
 import ChatInput from '../components/ChatInput'
 import Header from '../components/Header'
+import { Helmet } from 'react-helmet-async'
 import '../App.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -168,6 +169,11 @@ function ChatPage() {
 
   return (
     <div className="app">
+      <Helmet>
+        <title>Animal Based AI</title>
+        <meta name="description" content="Ask anything about the animal-based or carnivore diet. Get instant answers on nutrition, beef, organ meats, and how to eat ancestrally." />
+        <link rel="canonical" href="https://animalbased.ai" />
+      </Helmet>
       <Header user={session?.user} onSignIn={signIn} onSignOut={signOut} onResetChat={resetChat} />
       <main className="chat-container">
         <div className="messages">
