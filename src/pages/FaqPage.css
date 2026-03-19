@@ -1,0 +1,27 @@
+.faq-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.faq-item h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1208;
+  margin-bottom: 0.4rem;
+  line-height: 1.4;
+}
+
+.faq-item p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #555;
+  margin: 0;
+}

@@ -20,6 +20,31 @@
   color: var(--color-primary);
 }
 
+.header-title {
+  text-decoration: none;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.header-nav-link {
+  padding: 0.3rem 0.6rem;
+  color: #666;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 0.35rem;
+  transition: background 0.15s, color 0.15s;
+}
+
+.header-nav-link:hover {
+  background: #f5f0eb;
+  color: #333;
+}
+
 .header p {
   font-size: 0.8rem;
   color: #888;
