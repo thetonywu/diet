@@ -5,10 +5,12 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons'
 import ChatMessage from '../components/ChatMessage'
 import ChatInput from '../components/ChatInput'
 import Header from '../components/Header'
+import ComparisonModal from '../components/ComparisonModal'
 import { Helmet } from 'react-helmet-async'
 import '../App.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const COMPARISON_MODE = import.meta.env.VITE_COMPARISON_MODE === 'true'
 const STORAGE_KEY = 'diet-chat-history'
 const PENDING_MSG_KEY = 'diet-pending-message'
 const MAX_MESSAGES = 20
@@ -49,6 +51,7 @@ function ChatPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [showSignInNudge, setShowSignInNudge] = useState(false)
   const [pendingMessage, setPendingMessage] = useState(() => localStorage.getItem(PENDING_MSG_KEY))
+  const [comparisonData, setComparisonData] = useState(null)
   const messagesEndRef = useRef(null)
   const sendMessageRef = useRef(null)
 
@@ -120,32 +123,55 @@ function ChatPage() {
         headers.Authorization = `Bearer ${freshSession.access_token}`
       }
 
-      const res = await fetch(`${API_URL}/api/chat`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          message: text,
-          history: history,
-        }),
-      })
+      const fetchChat = (use_rag) =>
+        fetch(`${API_URL}/api/chat`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ message: text, history, use_rag }),
+        })
 
-      if (res.status === 401) {
-        await supabase.auth.signOut()
-        setSession(null)
-        return
+      if (COMPARISON_MODE) {
+        const [ragRes, noRagRes] = await Promise.all([fetchChat(true), fetchChat(false)])
+
+        if (ragRes.status === 401) {
+          await supabase.auth.signOut()
+          setSession(null)
+          return
+        }
+
+        if (ragRes.status === 429 && !freshSession) {
+          localStorage.setItem(PENDING_MSG_KEY, text)
+          setPendingMessage(text)
+          setShowSignInNudge(true)
+          return
+        }
+
+        if (!ragRes.ok || !noRagRes.ok) throw new Error('Failed to get response')
+
+        const [ragData, noRagData] = await Promise.all([ragRes.json(), noRagRes.json()])
+        setMessages((prev) => [...prev, { role: 'assistant', content: ragData.reply }])
+        setComparisonData({ ragReply: ragData.reply, noRagReply: noRagData.reply })
+      } else {
+        const res = await fetchChat(true)
+
+        if (res.status === 401) {
+          await supabase.auth.signOut()
+          setSession(null)
+          return
+        }
+
+        if (res.status === 429 && !freshSession) {
+          localStorage.setItem(PENDING_MSG_KEY, text)
+          setPendingMessage(text)
+          setShowSignInNudge(true)
+          return
+        }
+
+        if (!res.ok) throw new Error('Failed to get response')
+
+        const data = await res.json()
+        setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }])
       }
-
-      if (res.status === 429 && !freshSession) {
-        localStorage.setItem(PENDING_MSG_KEY, text)
-        setPendingMessage(text)
-        setShowSignInNudge(true)
-        return
-      }
-
-      if (!res.ok) throw new Error('Failed to get response')
-
-      const data = await res.json()
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }])
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -210,6 +236,13 @@ function ChatPage() {
         </div>
         <ChatInput onSend={sendMessage} disabled={isLoading} />
       </main>
+      {comparisonData && (
+        <ComparisonModal
+          ragReply={comparisonData.ragReply}
+          noRagReply={comparisonData.noRagReply}
+          onClose={() => setComparisonData(null)}
+        />
+      )}
     </div>
   )
 }
