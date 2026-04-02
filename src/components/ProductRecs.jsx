@@ -5,6 +5,7 @@ function ProductRecs({ products }) {
 
   return (
     <div className="product-recs">
+      <div className="product-recs-header">Recommended Products</div>
       {products.map((p) => (
         <a
           key={p.url}
