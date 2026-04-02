@@ -53,7 +53,7 @@ const components = {
 }
 
 function ChatMessage({ role, content, products }) {
-  const embeds = role === 'assistant' ? extractYouTubeEmbeds(content) : []
+  const embeds = role === 'assistant' ? extractYouTubeEmbeds(content).slice(0, 1) : []
 
   return (
     <div className={`message ${role}`}>
