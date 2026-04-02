@@ -130,8 +130,19 @@ function ChatPage() {
           body: JSON.stringify({ message: text, history, use_rag }),
         })
 
+      const fetchProducts = () =>
+        fetch(`${API_URL}/api/recommended-products`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ message: text, limit: 3 }),
+        }).then((r) => r.ok ? r.json() : { products: [] }).catch(() => ({ products: [] }))
+
       if (COMPARISON_MODE) {
-        const [ragRes, noRagRes] = await Promise.all([fetchChat(true), fetchChat(false)])
+        const [ragRes, noRagRes, productsData] = await Promise.all([
+          fetchChat(true),
+          fetchChat(false),
+          fetchProducts(),
+        ])
 
         if (ragRes.status === 401) {
           await supabase.auth.signOut()
@@ -149,10 +160,10 @@ function ChatPage() {
         if (!ragRes.ok || !noRagRes.ok) throw new Error('Failed to get response')
 
         const [ragData, noRagData] = await Promise.all([ragRes.json(), noRagRes.json()])
-        setMessages((prev) => [...prev, { role: 'assistant', content: ragData.reply }])
+        setMessages((prev) => [...prev, { role: 'assistant', content: ragData.reply, products: productsData.products }])
         setComparisonData({ ragReply: ragData.reply, noRagReply: noRagData.reply })
       } else {
-        const res = await fetchChat(true)
+        const [res, productsData] = await Promise.all([fetchChat(true), fetchProducts()])
 
         if (res.status === 401) {
           await supabase.auth.signOut()
@@ -170,7 +181,7 @@ function ChatPage() {
         if (!res.ok) throw new Error('Failed to get response')
 
         const data = await res.json()
-        setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }])
+        setMessages((prev) => [...prev, { role: 'assistant', content: data.reply, products: productsData.products }])
       }
     } catch {
       setMessages((prev) => [
@@ -204,7 +215,7 @@ function ChatPage() {
       <main className="chat-container">
         <div className="messages">
           {messages.map((msg, i) => (
-            <ChatMessage key={i} role={msg.role} content={msg.content} />
+            <ChatMessage key={i} role={msg.role} content={msg.content} products={msg.products} />
           ))}
           {!hasUserMessages && !isLoading && (
             <div className="presets">

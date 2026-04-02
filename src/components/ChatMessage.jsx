@@ -1,4 +1,5 @@
 import ReactMarkdown from 'react-markdown'
+import ProductRecs from './ProductRecs'
 
 // Matches full YouTube URLs to preserve query params (t=, start=)
 const YT_URL_REGEX = /https?:\/\/(?:www\.)?(?:youtube\.com\/watch[^\s)>"]*|youtu\.be\/[^\s)>"]*|youtube\.com\/embed\/[^\s)>"]*)/g
@@ -51,7 +52,7 @@ const components = {
   },
 }
 
-function ChatMessage({ role, content }) {
+function ChatMessage({ role, content, products }) {
   const embeds = role === 'assistant' ? extractYouTubeEmbeds(content) : []
 
   return (
@@ -67,6 +68,7 @@ function ChatMessage({ role, content }) {
           />
         </div>
       ))}
+      <ProductRecs products={products} />
     </div>
   )
 }
