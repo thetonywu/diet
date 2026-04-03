@@ -28,7 +28,6 @@ function Header({ user, onSignIn, onSignOut, onResetChat }) {
         </Link>
         <div className="header-right">
           <nav className="header-nav">
-            <NavLink to="/why" className={({ isActive }) => 'header-nav-link' + (isActive ? ' active' : '')}>Why Animal Based?</NavLink>
             <NavLink to="/about" className={({ isActive }) => 'header-nav-link' + (isActive ? ' active' : '')}>About</NavLink>
           </nav>
           {user ? (

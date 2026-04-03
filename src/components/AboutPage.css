@@ -53,3 +53,26 @@
   line-height: 1.7;
   color: #555;
 }
+
+.about-why-link {
+  display: inline-block;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+  margin-top: -0.25rem;
+  transition: opacity 0.15s;
+}
+
+.about-why-link:hover {
+  opacity: 0.75;
+}
+
+.about-email-link {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.about-email-link:hover {
+  text-decoration: underline;
+}

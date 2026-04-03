@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse } from '@fortawesome/free-solid-svg-icons'
@@ -24,6 +24,7 @@ function AboutPage() {
             eating centered around meat, organs, fruit, honey, and raw dairy while minimizing
             processed foods and seed oils.
           </p>
+          <NavLink to="/why" className="about-why-link">Why animal-based? →</NavLink>
 
           <h3>About me</h3>
           <p>
@@ -40,6 +41,9 @@ function AboutPage() {
             before making significant changes to your diet. The AI can make mistakes — verify anything
             important with a professional.
           </p>
+
+          <h3>Contact</h3>
+          <p>Questions or feedback? Reach out at <a href="mailto:hello@animalbased.ai" className="about-email-link">hello@animalbased.ai</a></p>
         </div>
     </div>
   )
