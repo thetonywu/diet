@@ -71,6 +71,14 @@ function ChatPage() {
   const sendMessageRef = useRef(null)
 
   useEffect(() => {
+    const ping = () => fetch(`${API_URL}/health`).catch(() => {})
+    ping()
+    const onVisibility = () => { if (document.visibilityState === 'visible') ping() }
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => document.removeEventListener('visibilitychange', onVisibility)
+  }, [])
+
+  useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setAuthLoading(false)
