@@ -234,6 +234,41 @@
   opacity: 0.85;
 }
 
+.failed-nudge {
+  margin: 0.5rem 1rem 1rem;
+  padding: 1rem 1.25rem;
+  background: #fff5f5;
+  border: 1.5px solid #e0a0a0;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.failed-nudge p {
+  flex: 1;
+  margin: 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.retry-btn {
+  padding: 0.4rem 0.9rem;
+  background: #c0392b;
+  color: white;
+  border: none;
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.retry-btn:hover {
+  opacity: 0.85;
+}
+
 .yt-embed {
   position: relative;
   width: 100%;

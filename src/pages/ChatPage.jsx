@@ -66,6 +66,7 @@ function ChatPage() {
   const [showSignInNudge, setShowSignInNudge] = useState(false)
   const [pendingMessage, setPendingMessage] = useState(() => localStorage.getItem(PENDING_MSG_KEY))
   const [comparisonData, setComparisonData] = useState(null)
+  const [failedMessage, setFailedMessage] = useState(null)
   const messagesEndRef = useRef(null)
   const sendMessageRef = useRef(null)
 
@@ -130,6 +131,7 @@ function ChatPage() {
   }
 
   const sendMessage = async (text, { alreadyAdded = false } = {}) => {
+    setFailedMessage(null)
     const userMessage = { role: 'user', content: text }
     const history = alreadyAdded ? messages.slice(0, -1) : [...messages]
     if (!alreadyAdded) {
@@ -206,10 +208,10 @@ function ChatPage() {
         setMessages((prev) => [...prev, { role: 'assistant', content: data.reply, products: productsData.products }])
       }
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        { role: 'assistant', content: 'Sorry, something went wrong. Please try again later.' },
-      ])
+      if (!alreadyAdded) {
+        setMessages((prev) => prev.slice(0, -1))
+      }
+      setFailedMessage(text)
     } finally {
       setIsLoading(false)
     }
@@ -257,6 +259,12 @@ function ChatPage() {
               <div className="typing-indicator">
                 <span></span><span></span><span></span>
               </div>
+            </div>
+          )}
+          {failedMessage && (
+            <div className="failed-nudge">
+              <p>Something went wrong. Your message was not sent.</p>
+              <button className="retry-btn" onClick={() => sendMessage(failedMessage)}>Retry</button>
             </div>
           )}
           {showSignInNudge && (
