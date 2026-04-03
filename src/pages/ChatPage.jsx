@@ -66,7 +66,6 @@ function ChatPage() {
   const [showSignInNudge, setShowSignInNudge] = useState(false)
   const [pendingMessage, setPendingMessage] = useState(() => localStorage.getItem(PENDING_MSG_KEY))
   const [comparisonData, setComparisonData] = useState(null)
-  const [serverWakingUp, setServerWakingUp] = useState(false)
   const messagesEndRef = useRef(null)
   const sendMessageRef = useRef(null)
 
@@ -163,7 +162,6 @@ function ChatPage() {
       if (COMPARISON_MODE) {
         const [ragRes, noRagRes, productsData] = await withRetry(
           () => Promise.all([fetchChat(true), fetchChat(false), fetchProducts()]),
-          () => setServerWakingUp(true),
         )
 
         if (ragRes.status === 401) {
@@ -187,7 +185,6 @@ function ChatPage() {
       } else {
         const [res, productsData] = await withRetry(
           () => Promise.all([fetchChat(true), fetchProducts()]),
-          () => setServerWakingUp(true),
         )
 
         if (res.status === 401) {
@@ -215,7 +212,6 @@ function ChatPage() {
       ])
     } finally {
       setIsLoading(false)
-      setServerWakingUp(false)
     }
   }
 
@@ -258,13 +254,9 @@ function ChatPage() {
           )}
           {isLoading && (
             <div className="message assistant">
-              {serverWakingUp ? (
-                <span className="waking-up-msg">Server is waking up, please wait…</span>
-              ) : (
-                <div className="typing-indicator">
-                  <span></span><span></span><span></span>
-                </div>
-              )}
+              <div className="typing-indicator">
+                <span></span><span></span><span></span>
+              </div>
             </div>
           )}
           {showSignInNudge && (
