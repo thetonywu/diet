@@ -24,7 +24,7 @@ function Header({ user, onSignIn, onSignOut, onResetChat }) {
     <header className="header">
       <div className="header-content">
         <Link to="/" className="header-title">
-          <h1><span className="header-title-accent">Animal Based AI</span></h1>
+          <h1><span className="header-title-accent">animalbased.ai</span></h1>
         </Link>
         <div className="header-right">
           <nav className="header-nav">
