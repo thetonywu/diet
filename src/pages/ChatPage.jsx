@@ -11,7 +11,7 @@ import '../App.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const COMPARISON_MODE = import.meta.env.VITE_COMPARISON_MODE === 'true'
-const MAX_RETRIES = 5
+const MAX_RETRIES = 3
 const RETRY_DELAY_MS = 7000
 
 async function withRetry(fn, onFirstFail) {
