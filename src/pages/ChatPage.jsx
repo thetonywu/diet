@@ -208,6 +208,7 @@ function ChatPage() {
         setMessages((prev) => [...prev, { role: 'assistant', content: data.reply, products: productsData.products }])
       }
     } catch {
+      if (!alreadyAdded) setMessages((prev) => prev.slice(0, -1))
       setFailedMessage(text)
     } finally {
       setIsLoading(false)
@@ -235,19 +236,9 @@ function ChatPage() {
       <Header user={session?.user} onSignIn={signIn} onSignOut={signOut} onResetChat={resetChat} />
       <main className="chat-container">
         <div className="messages">
-          {messages.map((msg, i) => {
-            const isFailed = !!failedMessage && msg.role === 'user' && i === messages.length - 1
-            return (
-              <ChatMessage
-                key={i}
-                role={msg.role}
-                content={msg.content}
-                products={msg.products}
-                failed={isFailed}
-                onRetry={isFailed ? () => sendMessage(failedMessage, { alreadyAdded: true }) : undefined}
-              />
-            )
-          })}
+          {messages.map((msg, i) => (
+            <ChatMessage key={i} role={msg.role} content={msg.content} products={msg.products} />
+          ))}
           {!hasUserMessages && !isLoading && (
             <div className="presets">
               {PRESET_MESSAGES.map((text) => (
@@ -265,6 +256,15 @@ function ChatPage() {
             <div className="message assistant">
               <div className="typing-indicator">
                 <span></span><span></span><span></span>
+              </div>
+            </div>
+          )}
+          {failedMessage && !isLoading && (
+            <div className="message user failed">
+              {failedMessage}
+              <div className="message-failed-row">
+                <span className="message-failed-label">Failed to send</span>
+                <button className="message-retry-btn" onClick={() => sendMessage(failedMessage)}>Retry</button>
               </div>
             </div>
           )}

@@ -52,18 +52,12 @@ const components = {
   },
 }
 
-function ChatMessage({ role, content, products, failed, onRetry }) {
+function ChatMessage({ role, content, products }) {
   const embeds = role === 'assistant' ? extractYouTubeEmbeds(content).slice(0, 1) : []
 
   return (
-    <div className={`message ${role}${failed ? ' failed' : ''}`}>
+    <div className={`message ${role}`}>
       <ReactMarkdown components={components}>{content}</ReactMarkdown>
-      {failed && (
-        <div className="message-failed-row">
-          <span className="message-failed-label">Failed to send</span>
-          <button className="message-retry-btn" onClick={onRetry}>Retry</button>
-        </div>
-      )}
       {embeds.map(({ videoId, src }) => (
         <div key={videoId} className="yt-embed">
           <iframe
