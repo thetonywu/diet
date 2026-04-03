@@ -11,6 +11,7 @@ import '../App.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const COMPARISON_MODE = import.meta.env.VITE_COMPARISON_MODE === 'true'
+const PRODUCT_RECS = import.meta.env.VITE_PRODUCT_RECS === 'true'
 const MAX_RETRIES = 3
 const RETRY_DELAY_MS = 7000
 
@@ -154,12 +155,13 @@ function ChatPage() {
           body: JSON.stringify({ message: text, history, use_rag }),
         })
 
-      const fetchProducts = () =>
-        fetch(`${API_URL}/api/recommended-products`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ message: text, limit: 3 }),
-        }).then((r) => r.ok ? r.json() : { products: [] }).catch(() => ({ products: [] }))
+      const fetchProducts = () => PRODUCT_RECS
+        ? fetch(`${API_URL}/api/recommended-products`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ message: text, limit: 3 }),
+          }).then((r) => r.ok ? r.json() : { products: [] }).catch(() => ({ products: [] }))
+        : Promise.resolve({ products: [] })
 
       if (COMPARISON_MODE) {
         const [ragRes, noRagRes, productsData] = await withRetry(
