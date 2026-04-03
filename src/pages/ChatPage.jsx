@@ -38,8 +38,9 @@ const WELCOME_MESSAGE = {
 
 const PRESET_MESSAGES = [
   'What is the Animal Based Diet?',
-  'What are the benefits?',
+  'How is this different from keto or carnivore?',
   'Give me a simple animal-based meal plan for a day',
+  'Is fruit actually healthy or just sugar?',
 ]
 
 function loadMessages() {
