@@ -11,6 +11,20 @@ import '../App.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const COMPARISON_MODE = import.meta.env.VITE_COMPARISON_MODE === 'true'
+const MAX_RETRIES = 2
+const RETRY_DELAY_MS = 7000
+
+async function withRetry(fn, onFirstFail) {
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      return await fn()
+    } catch (err) {
+      if (attempt === MAX_RETRIES) throw err
+      if (attempt === 0 && onFirstFail) onFirstFail()
+      await new Promise((r) => setTimeout(r, RETRY_DELAY_MS))
+    }
+  }
+}
 const STORAGE_KEY = 'diet-chat-history'
 const PENDING_MSG_KEY = 'diet-pending-message'
 const MAX_MESSAGES = 20
@@ -52,6 +66,7 @@ function ChatPage() {
   const [showSignInNudge, setShowSignInNudge] = useState(false)
   const [pendingMessage, setPendingMessage] = useState(() => localStorage.getItem(PENDING_MSG_KEY))
   const [comparisonData, setComparisonData] = useState(null)
+  const [serverWakingUp, setServerWakingUp] = useState(false)
   const messagesEndRef = useRef(null)
   const sendMessageRef = useRef(null)
 
@@ -138,11 +153,10 @@ function ChatPage() {
         }).then((r) => r.ok ? r.json() : { products: [] }).catch(() => ({ products: [] }))
 
       if (COMPARISON_MODE) {
-        const [ragRes, noRagRes, productsData] = await Promise.all([
-          fetchChat(true),
-          fetchChat(false),
-          fetchProducts(),
-        ])
+        const [ragRes, noRagRes, productsData] = await withRetry(
+          () => Promise.all([fetchChat(true), fetchChat(false), fetchProducts()]),
+          () => setServerWakingUp(true),
+        )
 
         if (ragRes.status === 401) {
           await supabase.auth.signOut()
@@ -163,7 +177,10 @@ function ChatPage() {
         setMessages((prev) => [...prev, { role: 'assistant', content: ragData.reply, products: productsData.products }])
         setComparisonData({ ragReply: ragData.reply, noRagReply: noRagData.reply })
       } else {
-        const [res, productsData] = await Promise.all([fetchChat(true), fetchProducts()])
+        const [res, productsData] = await withRetry(
+          () => Promise.all([fetchChat(true), fetchProducts()]),
+          () => setServerWakingUp(true),
+        )
 
         if (res.status === 401) {
           await supabase.auth.signOut()
@@ -190,6 +207,7 @@ function ChatPage() {
       ])
     } finally {
       setIsLoading(false)
+      setServerWakingUp(false)
     }
   }
 
@@ -232,9 +250,13 @@ function ChatPage() {
           )}
           {isLoading && (
             <div className="message assistant">
-              <div className="typing-indicator">
-                <span></span><span></span><span></span>
-              </div>
+              {serverWakingUp ? (
+                <span className="waking-up-msg">Server is waking up, please wait…</span>
+              ) : (
+                <div className="typing-indicator">
+                  <span></span><span></span><span></span>
+                </div>
+              )}
             </div>
           )}
           {showSignInNudge && (

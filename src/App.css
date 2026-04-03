@@ -234,6 +234,12 @@
   opacity: 0.85;
 }
 
+.waking-up-msg {
+  font-size: 0.88rem;
+  color: #888;
+  font-style: italic;
+}
+
 .yt-embed {
   position: relative;
   width: 100%;
